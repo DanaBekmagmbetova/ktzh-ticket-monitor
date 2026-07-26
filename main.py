@@ -24,11 +24,33 @@ def send_message(text):
 
 def check_ticket():
 
-    # Пока тестовая проверка
+    url = "https://bilet.railways.kz/sale/default/car/search"
 
-    # сюда дальше подключим проверку КТЖ
+    params = {
 
-    return False
+        "car_search_form[departureStation]": "2040500",
+
+        "car_search_form[arrivalStation]": "2708001",
+
+        "car_search_form[forwardDirection][departureTime]": "2026-08-01T00:00:00",
+
+        "car_search_form[forwardDirection][fluentDeparture]": "",
+
+        "car_search_form[forwardDirection][train]": "146",
+
+        "car_search_form[forwardDirection][isObligativeElReg]": "0",
+
+    }
+
+    response = requests.get(url, params=params)
+
+    text = response.text
+
+    if "146" in text and ("мест" in text or "place" in text):
+
+        return True
+
+    return False
 
 send_message("🚆 Мониторинг билетов КТЖ запущен\nПоезд: 146\nПетропавловск → Астана\nДата: 1 августа")
 
