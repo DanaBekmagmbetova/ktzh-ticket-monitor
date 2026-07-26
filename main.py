@@ -46,27 +46,53 @@ def check_ticket():
 
         page.wait_for_timeout(3000)
 
-        # показываем все видимые поля
-
-        print("ВИДИМЫЕ INPUT:")
+        # Откуда
 
         inputs = page.locator("input:visible")
 
-        print("Количество:", inputs.count())
+        departure = inputs.nth(0)
 
-        for i in range(inputs.count()):
+        arrival = inputs.nth(1)
 
-            print(
+        departure.fill("Петропавловск")
 
-                i,
+        page.wait_for_timeout(2000)
 
-                inputs.nth(i).get_attribute("placeholder"),
+        page.keyboard.press("ArrowDown")
 
-                inputs.nth(i).get_attribute("class")
+        page.keyboard.press("Enter")
 
-            )
+        arrival.fill("Астана Нурлы Жол")
+
+        page.wait_for_timeout(2000)
+
+        page.keyboard.press("ArrowDown")
+
+        page.keyboard.press("Enter")
+
+        # Дата
+
+        date = inputs.nth(2)
+
+        date.fill("01.08.2026")
+
+        # Нажимаем кнопку поиска
+
+        page.get_by_text("Билеттерді табыңыз").click()
+
+        page.wait_for_timeout(10000)
+
+        result = page.locator("body").inner_text()
+
+        print("РЕЗУЛЬТАТ ПОИСКА:")
+
+        print(result[:5000])
 
         browser.close()
+
+        if "146" in result:
+
+            return True
 
         return False
 
@@ -90,6 +116,8 @@ if check_ticket():
 
         "Поезд: 146\n"
 
-        "Петропавловск → Астана Нурлы Жол"
+        "Петропавловск → Астана Нурлы Жол\n"
+
+        "Дата: 1 августа 2026"
 
     )
