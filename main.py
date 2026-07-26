@@ -30,17 +30,9 @@ def check_ticket():
 
     with sync_playwright() as p:
 
-        browser = p.chromium.launch(
+        browser = p.chromium.launch(headless=True)
 
-            headless=True
-
-        )
-
-        page = browser.new_page(
-
-            locale="ru-RU"
-
-        )
+        page = browser.new_page(locale="ru-RU")
 
         page.goto(
 
@@ -54,65 +46,27 @@ def check_ticket():
 
         page.wait_for_timeout(3000)
 
-        # Откуда
+        # показываем все видимые поля
 
-        departure = page.locator(
+        print("ВИДИМЫЕ INPUT:")
 
-            'input[name="route_search_form[departureStation]"]'
+        inputs = page.locator("input:visible")
 
-        )
+        print("Количество:", inputs.count())
 
-        departure.fill("Петропавловск")
+        for i in range(inputs.count()):
 
-        page.wait_for_timeout(2000)
+            print(
 
-        # выбираем подсказку
+                i,
 
-        page.keyboard.press("ArrowDown")
+                inputs.nth(i).get_attribute("placeholder"),
 
-        page.keyboard.press("Enter")
+                inputs.nth(i).get_attribute("class")
 
-        # Куда
-
-        arrival = page.locator(
-
-            'input[name="route_search_form[arrivalStation]"]'
-
-        )
-
-        arrival.fill("Астана Нурлы Жол")
-
-        page.wait_for_timeout(2000)
-
-        page.keyboard.press("ArrowDown")
-
-        page.keyboard.press("Enter")
-
-        # Дата
-
-        date = page.locator(
-
-            'input[name="route_search_form[forwardDepartureDate]"]'
-
-        )
-
-        date.fill("01-08-2026")
-
-        # Нажать поиск
-
-        page.get_by_text("Билеттерді табыңыз").click()
-
-        page.wait_for_timeout(10000)
-
-        result = page.locator("body").inner_text()
-
-        print(result[:5000])
+            )
 
         browser.close()
-
-        if "146" in result:
-
-            return True
 
         return False
 
@@ -132,10 +86,10 @@ if check_ticket():
 
     send_message(
 
-        "🎫 Появился поезд 146!\n"
+        "🎫 Появился билет!\n"
 
-        "Петропавловск → Астана Нурлы Жол\n"
+        "Поезд: 146\n"
 
-        "Дата: 1 августа 2026"
+        "Петропавловск → Астана Нурлы Жол"
 
     )
