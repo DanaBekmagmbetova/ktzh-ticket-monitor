@@ -10,21 +10,9 @@ CHAT_ID = "494750357"
 
 def send_message(text):
 
-    url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
+    url = "https://api.telegram.org/bot" + BOT_TOKEN + "/sendMessage"
 
-    requests.post(
-
-        url,
-
-        data={
-
-            "chat_id": CHAT_ID,
-
-            "text": text
-
-        }
-
-    )
+    requests.post(url, data={"chat_id": CHAT_ID, "text": text})
 
 def check_ticket():
 
@@ -44,50 +32,18 @@ def check_ticket():
 
     }
 
-    response = requests.get(url, params=params)
+    r = requests.get(url, params=params)
 
-    if "146" in response.text:
+    return "146" in r.text
 
-        return True
-
-    return False
-
-send_message(
-
-    "🚆 Мониторинг билетов КТЖ запущен\n"
-
-    "Поезд: 146\n"
-
-    "Петропавловск → Астана Нурлы Жол\n"
-
-    "Дата: 1 августа 2026"
-
-)
+send_message("🚆 Мониторинг запущен: поезд 146 Петропавловск → Астана Нурлы Жол")
 
 while True:
 
-    try:
+    if check_ticket():
 
-        if check_ticket():
+        send_message("🎫 Появился билет! Поезд 146 Петропавловск → Астана Нурлы Жол")
 
-            send_message(
+        break
 
-                "🎫 Появился билет!\n"
-
-                "Поезд: 146\n"
-
-                "Петропавловск → Астана Нурлы Жол\n"
-
-                "Дата: 1 августа 2026"
-
-            )
-
-            break
-
-        time.sleep(300)
-
-    except Exception as e:
-
-        send_message(f"Ошибка: {e}")
-
-        time.sleep(300)
+    time.sleep(300)
