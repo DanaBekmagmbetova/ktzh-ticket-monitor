@@ -26,27 +26,25 @@ def send_message(text):
 
 def check_ticket():
 
-    url = "https://bilet.railways.kz/sale/default/car/search"
+    url = "https://bilet.railways.kz/sale/default/route/search"
 
     params = {
 
-        "car_search_form[departureStation]": "2040500",
+        "route_search_form[departureStation]": "2040500",
 
-        "car_search_form[arrivalStation]": "2708001",
+        "route_search_form[arrivalStation]": "2708001",
 
-        "car_search_form[forwardDirection][departureTime]": "2026-08-01T00:00:00",
-
-        "car_search_form[forwardDirection][train]": "146",
-
-        "car_search_form[forwardDirection][isObligativeElReg]": "0"
+        "route_search_form[forwardDepartureDate]": "01-08-2026"
 
     }
 
     response = requests.get(url, params=params)
 
-    print("ОТВЕТ КТЖ:")
-
     print(response.text[:3000])
+
+    if "146" in response.text:
+
+        return True
 
     return False
 
