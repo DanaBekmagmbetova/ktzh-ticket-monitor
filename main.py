@@ -56,8 +56,6 @@ send_message(
 
 )
 
-while True:
-
 if check_ticket():
 
     send_message(
