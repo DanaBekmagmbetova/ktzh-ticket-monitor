@@ -32,7 +32,7 @@ jobs:
 
         run: |
 
-          pip install requests
+          pip install requests playwright playwright install chromium
 
       - name: Start monitor
 
