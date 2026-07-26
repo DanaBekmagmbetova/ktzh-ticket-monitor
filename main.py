@@ -52,37 +52,67 @@ def check_ticket():
 
         )
 
-        page.wait_for_timeout(5000)
+        page.wait_for_timeout(3000)
 
-        print("КОЛИЧЕСТВО INPUT:")
+        # Откуда
 
-        print(page.locator("input").count())
+        departure = page.locator(
 
-        print("ПОЛЯ НА СТРАНИЦЕ:")
+            'input[name="route_search_form[departureStation]"]'
 
-        for i in range(page.locator("input").count()):
+        )
 
-            print(
+        departure.fill("Петропавловск")
 
-                i,
+        page.wait_for_timeout(2000)
 
-                "placeholder=",
+        # выбираем подсказку
 
-                page.locator("input").nth(i).get_attribute("placeholder"),
+        page.keyboard.press("ArrowDown")
 
-                "name=",
+        page.keyboard.press("Enter")
 
-                page.locator("input").nth(i).get_attribute("name")
+        # Куда
 
-            )
+        arrival = page.locator(
 
-        print("ТЕКСТ СТРАНИЦЫ:")
+            'input[name="route_search_form[arrivalStation]"]'
 
-        text = page.locator("body").inner_text()
+        )
 
-        print(text[:5000])
+        arrival.fill("Астана Нурлы Жол")
+
+        page.wait_for_timeout(2000)
+
+        page.keyboard.press("ArrowDown")
+
+        page.keyboard.press("Enter")
+
+        # Дата
+
+        date = page.locator(
+
+            'input[name="route_search_form[forwardDepartureDate]"]'
+
+        )
+
+        date.fill("01-08-2026")
+
+        # Нажать поиск
+
+        page.get_by_text("Билеттерді табыңыз").click()
+
+        page.wait_for_timeout(10000)
+
+        result = page.locator("body").inner_text()
+
+        print(result[:5000])
 
         browser.close()
+
+        if "146" in result:
+
+            return True
 
         return False
 
@@ -102,9 +132,7 @@ if check_ticket():
 
     send_message(
 
-        "🎫 Появился билет!\n"
-
-        "Поезд: 146\n"
+        "🎫 Появился поезд 146!\n"
 
         "Петропавловск → Астана Нурлы Жол\n"
 
