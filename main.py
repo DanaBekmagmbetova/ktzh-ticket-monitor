@@ -2,13 +2,15 @@ import os
 
 import requests
 
+from playwright.sync_api import sync_playwright
+
 BOT_TOKEN = os.environ["BOT_TOKEN"]
 
 CHAT_ID = "494750357"
 
 def send_message(text):
 
-    url = "https://api.telegram.org/bot" + BOT_TOKEN + "/sendMessage"
+    url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
 
     requests.post(
 
@@ -26,31 +28,51 @@ def send_message(text):
 
 def check_ticket():
 
-    url = "https://bilet.railways.kz/sale/default/route/search"
+    with sync_playwright() as p:
 
-    params = {
+        browser = p.chromium.launch(
 
-        "route_search_form[departureStation]": "2040500",
+            headless=True
 
-        "route_search_form[arrivalStation]": "2708001",
+        )
 
-        "route_search_form[forwardDepartureDate]": "01-08-2026"
+        page = browser.new_page(
 
-    }
+            locale="ru-RU"
 
-    response = requests.get(url, params=params)
+        )
 
-    print(response.text[:3000])
+        page.goto(
 
-    if "146" in response.text:
+            "https://bilet.railways.kz",
 
-        return True
+            wait_until="networkidle",
 
-    return False
+            timeout=60000
+
+        )
+
+        # ждём загрузку формы
+
+        page.wait_for_timeout(5000)
+
+        # сохраняем текст страницы для проверки
+
+        text = page.text_content("body")
+
+        print(text[:3000])
+
+        browser.close()
+
+        if "146" in text:
+
+            return True
+
+        return False
 
 send_message(
 
-    "🚆 Мониторинг билетов КТЖ запущен\n"
+    "🚆 Мониторинг КТЖ запущен\n"
 
     "Поезд: 146\n"
 
@@ -60,4 +82,14 @@ send_message(
 
 )
 
-check_ticket()
+if check_ticket():
+
+    send_message(
+
+        "🎫 Появился поезд 146!\n"
+
+        "Петропавловск → Астана Нурлы Жол\n"
+
+        "Дата: 1 августа 2026"
+
+    )
