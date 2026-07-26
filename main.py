@@ -30,9 +30,17 @@ def check_ticket():
 
     with sync_playwright() as p:
 
-        browser = p.chromium.launch(headless=True)
+        browser = p.chromium.launch(
 
-        page = browser.new_page(locale="ru-RU")
+            headless=True
+
+        )
+
+        page = browser.new_page(
+
+            locale="ru-RU"
+
+        )
 
         page.goto(
 
@@ -82,7 +90,7 @@ def check_ticket():
 
         page.wait_for_timeout(1000)
 
-        # Кнопка поиска
+        # Поиск
 
         page.locator("button").filter(
 
@@ -94,15 +102,23 @@ def check_ticket():
 
         result = page.locator("body").inner_text()
 
-        print("РЕЗУЛЬТАТ:")
+        print("РЕЗУЛЬТАТ ПОИСКА:")
 
         print(result[:5000])
 
         browser.close()
 
+        # Билетов нет
+
+        if "Поиск не дал результатов" in result:
+
+            return False
+
         if "Найдено результата - 0" in result:
 
             return False
+
+        # Поезд появился
 
         if "146" in result:
 
@@ -128,7 +144,7 @@ def save_status(status):
 
         f.write(status)
 
-# Проверяем билет
+# Проверка
 
 ticket = check_ticket()
 
