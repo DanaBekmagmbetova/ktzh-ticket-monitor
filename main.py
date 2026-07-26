@@ -38,7 +38,7 @@ def check_ticket():
 
         "car_search_form[forwardDirection][train]": "146",
 
-        "car_search_form[forwardDirection][isObligativeElReg]": "0",
+        "car_search_form[forwardDirection][isObligativeElReg]": "0"
 
     }
 
@@ -46,7 +46,7 @@ def check_ticket():
 
     text = response.text
 
-    if "146" in text and ("мест" in text or "place" in text):
+    if "146" in text:
 
         return True
 
