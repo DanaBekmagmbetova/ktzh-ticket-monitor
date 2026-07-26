@@ -46,13 +46,17 @@ def check_ticket():
 
         page.wait_for_timeout(3000)
 
+        # Видимые поля
+
         inputs = page.locator("input:visible")
 
         # Откуда
 
-        inputs.nth(0).fill("Петропавловск")
+        departure = inputs.nth(0)
 
-        page.wait_for_timeout(1500)
+        departure.fill("Петропавловск")
+
+        page.wait_for_timeout(2000)
 
         page.keyboard.press("ArrowDown")
 
@@ -60,9 +64,11 @@ def check_ticket():
 
         # Куда
 
-        inputs.nth(1).fill("Астана Нурлы Жол")
+        arrival = inputs.nth(1)
 
-        page.wait_for_timeout(1500)
+        arrival.fill("Астана Нурлы Жол")
+
+        page.wait_for_timeout(2000)
 
         page.keyboard.press("ArrowDown")
 
@@ -70,27 +76,33 @@ def check_ticket():
 
         # Дата
 
-        inputs.nth(2).fill("01.08.2026")
+        date = inputs.nth(2)
 
-        # Поиск
+        date.fill("01.08.2026")
 
-        page.get_by_text("Найти билеты").click()
+        page.wait_for_timeout(1000)
+
+        # Кнопка поиска
+
+        page.locator("button").filter(
+
+            has_text="Билеттер"
+
+        ).click()
 
         page.wait_for_timeout(10000)
 
         result = page.locator("body").inner_text()
 
+        print("РЕЗУЛЬТАТ:")
+
         print(result[:5000])
 
         browser.close()
 
-        # Если результатов нет
-
         if "Найдено результата - 0" in result:
 
             return False
-
-        # Если появился поезд 146
 
         if "146" in result:
 
@@ -116,7 +128,7 @@ def save_status(status):
 
         f.write(status)
 
-# Проверка
+# Проверяем билет
 
 ticket = check_ticket()
 
@@ -134,7 +146,7 @@ if ticket:
 
             "Маршрут: Петропавловск → Астана Нурлы Жол\n"
 
-            "Дата: 1 августа 2026"
+            "📅 Дата: 1 августа 2026"
 
         )
 
