@@ -46,25 +46,23 @@ def check_ticket():
 
         page.wait_for_timeout(3000)
 
-        # Откуда
-
         inputs = page.locator("input:visible")
 
-        departure = inputs.nth(0)
+        # Откуда
 
-        arrival = inputs.nth(1)
+        inputs.nth(0).fill("Петропавловск")
 
-        departure.fill("Петропавловск")
-
-        page.wait_for_timeout(2000)
+        page.wait_for_timeout(1500)
 
         page.keyboard.press("ArrowDown")
 
         page.keyboard.press("Enter")
 
-        arrival.fill("Астана Нурлы Жол")
+        # Куда
 
-        page.wait_for_timeout(2000)
+        inputs.nth(1).fill("Астана Нурлы Жол")
+
+        page.wait_for_timeout(1500)
 
         page.keyboard.press("ArrowDown")
 
@@ -72,23 +70,27 @@ def check_ticket():
 
         # Дата
 
-        date = inputs.nth(2)
+        inputs.nth(2).fill("01.08.2026")
 
-        date.fill("01.08.2026")
+        # Поиск
 
-        # Нажимаем кнопку поиска
-
-        page.get_by_text("Билеттерді табыңыз").click()
+        page.get_by_text("Найти билеты").click()
 
         page.wait_for_timeout(10000)
 
         result = page.locator("body").inner_text()
 
-        print("РЕЗУЛЬТАТ ПОИСКА:")
-
         print(result[:5000])
 
         browser.close()
+
+        # Если результатов нет
+
+        if "Найдено результата - 0" in result:
+
+            return False
+
+        # Если появился поезд 146
 
         if "146" in result:
 
@@ -96,28 +98,48 @@ def check_ticket():
 
         return False
 
-send_message(
+def get_old_status():
 
-    "🚆 Мониторинг КТЖ запущен\n"
+    try:
 
-    "Поезд: 146\n"
+        with open("status.txt", "r") as f:
 
-    "Петропавловск → Астана Нурлы Жол\n"
+            return f.read()
 
-    "Дата: 1 августа 2026"
+    except:
 
-)
+        return "none"
 
-if check_ticket():
+def save_status(status):
 
-    send_message(
+    with open("status.txt", "w") as f:
 
-        "🎫 Появился билет!\n"
+        f.write(status)
 
-        "Поезд: 146\n"
+# Проверка
 
-        "Петропавловск → Астана Нурлы Жол\n"
+ticket = check_ticket()
 
-        "Дата: 1 августа 2026"
+old_status = get_old_status()
 
-    )
+if ticket:
+
+    if old_status != "found":
+
+        send_message(
+
+            "🎫 Появился билет!\n\n"
+
+            "🚆 Поезд: 146\n"
+
+            "Маршрут: Петропавловск → Астана Нурлы Жол\n"
+
+            "Дата: 1 августа 2026"
+
+        )
+
+        save_status("found")
+
+else:
+
+    save_status("empty")
