@@ -40,8 +40,8 @@ def check_ticket():
 
     response = requests.get(url, params=params)
 
-   print(response.text[:2000]):
-        
+    print(response.text[:2000])
+
     return False
 
 send_message(
