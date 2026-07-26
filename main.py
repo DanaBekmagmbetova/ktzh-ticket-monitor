@@ -52,23 +52,37 @@ def check_ticket():
 
         )
 
-        page.screenshot(path="ktzh.png")
-
-        # ждём загрузку формы
-
         page.wait_for_timeout(5000)
 
-        # сохраняем текст страницы для проверки
+        print("КОЛИЧЕСТВО INPUT:")
 
-        text = page.text_content("body")
+        print(page.locator("input").count())
 
-        print(text[:3000])
+        print("ПОЛЯ НА СТРАНИЦЕ:")
+
+        for i in range(page.locator("input").count()):
+
+            print(
+
+                i,
+
+                "placeholder=",
+
+                page.locator("input").nth(i).get_attribute("placeholder"),
+
+                "name=",
+
+                page.locator("input").nth(i).get_attribute("name")
+
+            )
+
+        print("ТЕКСТ СТРАНИЦЫ:")
+
+        text = page.locator("body").inner_text()
+
+        print(text[:5000])
 
         browser.close()
-
-        if "146" in text:
-
-            return True
 
         return False
 
@@ -88,7 +102,9 @@ if check_ticket():
 
     send_message(
 
-        "🎫 Появился поезд 146!\n"
+        "🎫 Появился билет!\n"
+
+        "Поезд: 146\n"
 
         "Петропавловск → Астана Нурлы Жол\n"
 
