@@ -6,7 +6,7 @@ from datetime import datetime
 
 import os
 
-BOT_TOKEN = os.envirion["BOT_TOKEN"]
+BOT_TOKEN = os.environ["BOT_TOKEN"]
 
 CHAT_ID = "494750357"
 
