@@ -58,18 +58,16 @@ send_message(
 
 while True:
 
-    if check_ticket():
+if check_ticket():
 
-        send_message(
+    send_message(
 
-            "🎫 Появился билет!\n"
+        "🎫 Появился билет!\n"
 
-            "Поезд: 146\n"
+        "Поезд: 146\n"
 
-            "Петропавловск → Астана Нурлы Жол"
+        "Петропавловск → Астана Нурлы Жол\n"
 
-        )
+        "Дата: 1 августа 2026"
 
-        break
-
-    time.sleep(300)
+    )
