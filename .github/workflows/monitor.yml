@@ -1,0 +1,45 @@
+name: KTZH Ticket Monitor
+
+on:
+
+  schedule:
+
+    - cron: "*/5 * * * *"
+
+  workflow_dispatch:
+
+jobs:
+
+  monitor:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Download code
+
+        uses: actions/checkout@v4
+
+      - name: Install Python
+
+        uses: actions/setup-python@v5
+
+        with:
+
+          python-version: "3.11"
+
+      - name: Install libraries
+
+        run: |
+
+          pip install requests
+
+      - name: Start monitor
+
+        env:
+
+          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+
+        run: |
+
+          python main.py
