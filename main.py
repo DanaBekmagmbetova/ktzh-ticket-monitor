@@ -4,7 +4,9 @@ import time
 
 from datetime import datetime
 
-BOT_TOKEN = "8791960531:AAHovdmQzeZyQZM5E02P_e17Ay3WE5J4prc"
+import os
+
+BOT_TOKEN = os.envirion["BOT_TOKEN"]
 
 CHAT_ID = "494750357"
 
@@ -28,7 +30,7 @@ def check_ticket():
 
     return False
 
-send_message("🚆 Мониторинг билетов КТЖ запущен\nПоезд: 146Н\nПетропавловск → Астана\nДата: 1 августа")
+send_message("🚆 Мониторинг билетов КТЖ запущен\nПоезд: 146\nПетропавловск → Астана\nДата: 1 августа")
 
 while True:
 
