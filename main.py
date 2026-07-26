@@ -52,6 +52,8 @@ def check_ticket():
 
         )
 
+        page.screenshot(path="ktzh.png")
+
         # ждём загрузку формы
 
         page.wait_for_timeout(5000)
