@@ -2,8 +2,6 @@ import os
 
 import requests
 
-import time
-
 BOT_TOKEN = os.environ["BOT_TOKEN"]
 
 CHAT_ID = "494750357"
@@ -12,13 +10,19 @@ def send_message(text):
 
     url = "https://api.telegram.org/bot" + BOT_TOKEN + "/sendMessage"
 
-    requests.post(url, data={
+    requests.post(
 
-        "chat_id": CHAT_ID,
+        url,
 
-        "text": text
+        data={
 
-    })
+            "chat_id": CHAT_ID,
+
+            "text": text
+
+        }
+
+    )
 
 def check_ticket():
 
@@ -40,13 +44,15 @@ def check_ticket():
 
     response = requests.get(url, params=params)
 
-    print(response.text[:2000])
+    print("ОТВЕТ КТЖ:")
+
+    print(response.text[:3000])
 
     return False
 
 send_message(
 
-    "🚆 Мониторинг запущен\n"
+    "🚆 Мониторинг билетов КТЖ запущен\n"
 
     "Поезд: 146\n"
 
@@ -56,16 +62,4 @@ send_message(
 
 )
 
-if check_ticket():
-
-    send_message(
-
-        "🎫 Появился билет!\n"
-
-        "Поезд: 146\n"
-
-        "Петропавловск → Астана Нурлы Жол\n"
-
-        "Дата: 1 августа 2026"
-
-    )
+check_ticket()
